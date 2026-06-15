@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Libre+Franklin:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --off-white: #f7f6f3;
+  --gray-100: #f0eeea;
+  --gray-200: #e2dfd8;
+  --gray-400: #a8a49c;
+  --gray-600: #6b6760;
+  --gray-800: #2e2c29;
+  --accent: #c8392b;       /* NESI red — strong, editorial */
+  --accent-light: #fdf0ef;
+  --green: #1a7a4a;
+  --green-light: #edf7f2;
+  --red: #c8392b;
+  --red-light: #fdf0ef;
+  --neutral: #5a6a7a;
+  --neutral-light: #f0f3f6;
+  --border: #dedad3;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Libre Franklin', system-ui, sans-serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --max-width: 1200px;
+  --header-height: 60px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--off-white);
+  color: var(--black);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.site-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.logo-nesi {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.logo-full {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--gray-600);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.site-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.site-nav a {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-nav a:hover { color: var(--black); }
+.site-nav a.active { color: var(--black); border-bottom-color: var(--accent); }
+
+@media (max-width: 640px) {
+  .site-header { padding: 0 1rem; }
+  .logo-full { display: none; }
+  .site-nav { gap: 1rem; }
+  .site-nav a { font-size: 0.72rem; letter-spacing: 0.04em; }
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  background: var(--white);
+}
+
+/* ── Page shell ──────────────────────────────────────────────────────────── */
+.page { max-width: var(--max-width); margin: 0 auto; padding: 3rem 2rem; }
+.page-wide { max-width: 100%; padding: 0; }
+
+/* ── Score badge ─────────────────────────────────────────────────────────── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+}
+.score-badge.positive { background: var(--green-light); color: var(--green); }
+.score-badge.negative { background: var(--red-light); color: var(--red); }
+.score-badge.neutral  { background: var(--neutral-light); color: var(--neutral); }
+
+/* ── Label pill ──────────────────────────────────────────────────────────── */
+.label-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+.label-pill.strongly-productive  { background: var(--green-light); color: var(--green); }
+.label-pill.net-productive       { background: #eef6ee; color: #2d6a3f; }
+.label-pill.net-extractive       { background: #fdf4ee; color: #b05a1a; }
+.label-pill.strongly-extractive  { background: var(--red-light); color: var(--red); }
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.mono { font-family: var(--font-mono); }
+.muted { color: var(--gray-600); }

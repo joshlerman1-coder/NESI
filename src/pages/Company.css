@@ -1,0 +1,650 @@
+.company-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+  margin-bottom: 2rem;
+}
+
+.breadcrumb a { color: var(--gray-600); }
+.breadcrumb a:hover { color: var(--black); }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.company-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--black);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.company-ticker {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--gray-400);
+  margin-bottom: 0.25rem;
+}
+
+.company-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.company-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.company-sector {
+  font-size: 0.78rem;
+  color: var(--gray-600);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+.company-rank {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gray-400);
+}
+
+.company-hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.big-score {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* ── Grid ─────────────────────────────────────────────────────────────────── */
+.company-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.card-wide { grid-column: 1 / -1; }
+
+.card-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Breakdown rows ───────────────────────────────────────────────────────── */
+.breakdown-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-100);
+  gap: 1rem;
+}
+
+.breakdown-row.total {
+  border-top: 2px solid var(--black);
+  border-bottom: none;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.br-label {
+  font-size: 0.82rem;
+  color: var(--gray-600);
+}
+
+.br-val {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+/* ── Metrics grid ─────────────────────────────────────────────────────────── */
+.metrics-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+.metric-val {
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* ── Notes ────────────────────────────────────────────────────────────────── */
+.card-note {
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.company-footer-note {
+  margin-top: 2rem;
+  font-size: 0.78rem;
+  color: var(--gray-400);
+}
+
+.company-footer-note a {
+  color: var(--gray-600);
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .company-grid { grid-template-columns: 1fr; }
+  .card-wide { grid-column: 1; }
+}
+
+/* ── Grade badges ───────────────────────────────────────────────────── */
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.grade-badge-large {
+  width: 48px; height: 48px;
+  font-size: 1.5rem;
+  border-radius: 4px;
+}
+.grade-a { background: var(--green-light); color: var(--green); }
+.grade-b { background: #eef6ee;            color: #2d6a3f; }
+.grade-c { background: #fdf4ee;            color: #b05a1a; }
+.grade-d { background: #fdf0e8;            color: #b04010; }
+.grade-f { background: var(--red-light);   color: var(--red); }
+
+.big-score-denom {
+  font-size: 0.4em;
+  opacity: 0.6;
+  margin-left: 2px;
+}
+
+.company-label {
+  font-size: 0.78rem;
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+/* ── FCF Margin card ─────────────────────────────────────────────────── */
+.fcf-margin-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.fcf-margin-number {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.fcf-margin-label {
+  font-size: 0.75rem;
+  color: var(--gray-600);
+  line-height: 1.3;
+}
+
+.fcf-margin-bar-wrap {
+  margin-bottom: 1rem;
+}
+
+.fcf-margin-track {
+  position: relative;
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.3rem;
+}
+
+.fcf-margin-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.fcf-margin-marker {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--gray-400);
+  opacity: 0.6;
+}
+
+.fcf-margin-axis {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--gray-400);
+  font-family: var(--font-mono);
+}
+
+.fcf-margin-impact p {
+  font-size: 0.82rem;
+  color: var(--gray-800);
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+.fcf-margin-explain {
+  color: var(--gray-600) !important;
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ── Extraction per employee card ─────────────────────────────────────── */
+.extraction-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.extraction-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.extraction-col + .extraction-col {
+  border-left: 1px solid var(--gray-100);
+  padding-left: 1rem;
+}
+
+.extraction-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.extraction-value-peer {
+  color: var(--gray-600);
+  font-size: 1.5rem;
+}
+
+.extraction-caption {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+}
+
+/* ── Gov-assistance flag (top of page) ────────────────────────────────── */
+.gov-flag {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.5rem;
+  background: var(--red-light, #fdebe8);
+  border-left: 3px solid var(--red);
+  border-radius: 3px;
+}
+
+.gov-flag-icon {
+  font-size: 1.25rem;
+  color: var(--red);
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.gov-flag-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.88rem;
+  color: var(--gray-800);
+  line-height: 1.45;
+}
+
+.gov-flag-body strong {
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ── Gov-assistance card ─────────────────────────────────────────────── */
+.gov-assist-pair {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.gov-assist-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gov-assist-col + .gov-assist-col {
+  border-left: 1px solid var(--gray-100);
+  padding-left: 1rem;
+}
+
+.gov-assist-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+}
+
+.gov-assist-value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.gov-assist-penalty {
+  color: var(--red);
+}
+
+.gov-assist-note {
+  font-size: 0.82rem;
+  color: var(--gray-800);
+  line-height: 1.5;
+}
+
+.gov-assist-tag {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--gray-400);
+}
+
+.gov-assist-tag code {
+  background: var(--gray-100);
+  padding: 0 0.3rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 640px) {
+  .gov-assist-pair { grid-template-columns: 1fr; }
+  .gov-assist-col + .gov-assist-col { border-left: none; padding-left: 0; }
+}
+
+/* ── Score drivers ───────────────────────────────────────────────────────── */
+.drivers-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.drivers-header {
+  padding: 1.25rem 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.drivers-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+
+.drivers-sub {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+}
+
+.drivers-desc {
+  font-size: 0.9rem;
+  color: var(--gray-800);
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+
+.drivers-why {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-top: 0.35rem;
+  line-height: 1.5;
+}
+
+.drivers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.drivers-col {
+  padding: 1.25rem 1.5rem;
+}
+
+.drivers-col-positive {
+  border-right: 1px solid var(--border);
+  background: #f9fdf9;
+}
+
+.drivers-col-negative {
+  background: #fdf9f9;
+}
+
+.drivers-col-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.drivers-col-positive .drivers-col-label { color: var(--green); }
+.drivers-col-negative .drivers-col-label { color: var(--red); }
+
+.drivers-col-icon {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.driver-item {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.driver-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.driver-bar-wrap {
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+}
+
+.driver-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.driver-bar-positive { background: var(--green); }
+.driver-bar-negative { background: var(--red); }
+
+.driver-info {
+  margin-bottom: 0.4rem;
+}
+
+.driver-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 0.15rem;
+}
+
+.driver-detail {
+  font-size: 0.75rem;
+  color: var(--gray-600);
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.driver-values {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.driver-amt {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--gray-800);
+}
+
+.driver-pct {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.drivers-empty {
+  font-size: 0.82rem;
+  color: var(--gray-400);
+  font-style: italic;
+}
+
+/* ── Details disclosure ───────────────────────────────────────────────────── */
+.details-section {
+  margin-bottom: 1.5rem;
+}
+
+.details-toggle {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 0.6rem 0;
+  letter-spacing: 0.02em;
+  list-style: none;
+  user-select: none;
+}
+.details-toggle:hover { color: var(--black); }
+.details-toggle::-webkit-details-marker { display: none; }
+
+.details-grid {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .drivers-grid { grid-template-columns: 1fr; }
+  .drivers-col-positive { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ── Score over time ──────────────────────────────────────────────────────── */
+.trend-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem 1rem;
+}
+
+.trend-header {
+  margin-bottom: 0.75rem;
+}
+
+.trend-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+
+.trend-sub {
+  font-size: 0.82rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* ── Hero score window + trend chips ──────────────────────────────────────── */
+.score-window {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--gray-400);
+}
+
+.score-trend {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.score-trend.up { color: var(--green); }
+.score-trend.down { color: var(--red); }

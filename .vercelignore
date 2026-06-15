@@ -1,0 +1,8 @@
+# Never upload local env files to Vercel's build.
+# Production VITE_* vars are configured in the Vercel project settings instead.
+# This keeps the secret NEON_DATABASE_URL write string and Supabase service key local.
+.env
+.env.*
+
+# Python ingestion project is server-side only; not part of the frontend build.
+sec-project
