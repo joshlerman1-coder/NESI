@@ -164,15 +164,15 @@ function computeExtractionPerEmployee(m) {
   if (!m) return null
   const cx = Math.abs(m.cx || 0)
   const da = Math.abs(m.da || 0)
-  const dr = Math.abs(m.dr || 0)
-  const di = Math.abs(m.di || 0)
   const div = Math.abs(m.div || 0)
   const sbb = Math.abs(m.sbb || 0)
   const underfunded = Math.max(da - cx, 0)
-  const shareholder = div + sbb
-  const netNewDebt = Math.max(di - dr, 0)
-  const debtPart = netNewDebt > 0 && shareholder > 0 ? netNewDebt : 0
-  const total = div + sbb + underfunded + debtPart
+  // Per-employee extraction reflects actual value leaving the enterprise:
+  // cash returned to shareholders (dividends + buybacks) plus the non-cash
+  // but real cost of running down the asset base (underfunded capex). The
+  // debt-fueled multiplier is a scoring mechanism, not a dollar outflow, so
+  // it is excluded here — see the Methodology page.
+  const total = div + sbb + underfunded
   if (!m.employees || m.employees <= 0 || total <= 0) return null
   return total / m.employees
 }
@@ -364,9 +364,13 @@ export default function Company() {
   const whySentence = buildWhySentence(company, { positive, negative })
   const description = company.description || 'A publicly traded U.S. company.'
 
-  // Total dollars extracted = sum of the four extractive driver values the
-  // drivers panel surfaces (dividends, buybacks, underfunded capex, debt-fueled).
-  const totalExtraction = negative.reduce((s, d) => s + (d.value || 0), 0)
+  // Total dollars extracted = dividends + buybacks + underfunded capex. The
+  // debt-fueled driver is excluded: it is a scoring multiplier, not a dollar
+  // outflow, so it would make the per-employee figure misrepresent actual
+  // value leaving the enterprise. Matches computeExtractionPerEmployee.
+  const totalExtraction = negative
+    .filter(d => d.label !== 'Debt-Fueled Extraction')
+    .reduce((s, d) => s + (d.value || 0), 0)
   const employees = metrics?.employees || 0
   const extractionPerEmployee = employees > 0 && totalExtraction > 0
     ? totalExtraction / employees

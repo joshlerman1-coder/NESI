@@ -86,12 +86,13 @@ export default function Methodology() {
 
         <section className="method-section">
           <h2>Step 2 — Extractive inputs</h2>
-          <div className="formula">Extractive = (max(DA − CX, 0) + DIV + SBB) × Debt Multiplier</div>
+          <div className="formula">net SBB = max(SBB − SBC, 0)</div>
+          <div className="formula">Extractive = (max(DA − CX, 0) + DIV + net SBB) × Debt Multiplier</div>
           <p>Three things lower the score, with an optional multiplier for debt-fueled extraction:</p>
           <ul>
             <li><strong>Underfunded CapEx</strong> — when CX &lt; DA, the company is not replacing assets as fast as they depreciate. The shortfall max(DA − CX, 0) represents implicit extraction — quietly liquidating the productive base. This is the mirror of Growth CapEx: the two terms are mutually exclusive by construction.</li>
             <li><strong>Dividends</strong> — cash returned to shareholders rather than reinvested.</li>
-            <li><strong>Share Buybacks</strong> — cash used to repurchase equity.</li>
+            <li><strong>Share Buybacks (net of SBC)</strong> — only the portion of buybacks that exceeds stock-based compensation (SBC) counts as extractive. Buybacks up to the SBC amount merely offset the dilution created by paying employees in equity — economically equivalent to paying those employees in cash, which would already have reduced OCF. Only the excess beyond SBC genuinely reduces the share count and returns capital to outside shareholders.</li>
           </ul>
           <p className="method-note">
             <em>Note:</em> earlier versions added a government-assistance penalty (0.5 × GA)
@@ -102,7 +103,7 @@ export default function Methodology() {
           </p>
           <h3>Debt-fueled extraction multiplier</h3>
           <div className="formula">Net New Debt = max(DI − DR, 0)</div>
-          <div className="formula">Debt Multiplier = 1 + min((Net New Debt / (DIV + SBB)) × 0.25, 0.25)</div>
+          <div className="formula">Debt Multiplier = 1 + min((Net New Debt / (DIV + net SBB)) × 0.25, 0.25)</div>
           <p>
             When a company is a net new borrower (issuing more debt than it repays) while simultaneously returning capital to shareholders, it is borrowing to extract — mortgaging the company's future to fund dividends or buybacks today. The multiplier applies a penalty of up to 25% on the extractive total. It reaches its maximum (1.25×) when net new debt equals or exceeds 100% of shareholder returns, and scales linearly below that. It only triggers on net new debt to avoid penalizing routine refinancing.
           </p>
@@ -245,15 +246,18 @@ export default function Methodology() {
 
         <section className="method-section">
           <h2>Supplementary metric — Extraction per employee</h2>
-          <div className="formula">Extraction per Employee = (DIV + SBB + max(DA − CX, 0) + Debt-fueled Extraction) ÷ Full-time Employees</div>
+          <div className="formula">Extraction per Employee = (DIV + net SBB + max(DA − CX, 0)) ÷ Full-time Employees</div>
           <p>
-            Shown on every company page alongside the main score, this metric divides the dollar value of a single year's extractive activity by the company's full-time headcount. It expresses, in plain dollars, how much cash management chose to return to shareholders (or quietly liquidate from the asset base) per worker employed.
+            Shown on every company page alongside the main score, this metric divides the dollar value of a single year's extractive activity by the company's full-time headcount. It expresses how much value management chose to return to shareholders — or quietly liquidate from the asset base — per worker employed.
+          </p>
+          <p>
+            Two of the three numerator components are actual cash outflows: dividends paid and net share buybacks. The third, underfunded CapEx (max(DA − CX, 0)), is not a cash flow — it is an accounting measure of how far capital spending fell short of keeping pace with asset depreciation. It is included because the economic claim is real: assets that are not replaced as they wear out eventually must be, and the cost of that deferred reinvestment is borne by whoever owns the company in the future. Choosing not to reinvest today transfers value to current shareholders in the same way a cash dividend does, just on a deferred timeline and in a less visible form. The debt multiplier applied in the main score is intentionally excluded here — it is a scoring mechanism, not an observable dollar amount, and including it would make the per-employee figure uninterpretable as an actual value transfer.
           </p>
           <p>
             <strong>What it demonstrates.</strong> A large number does not automatically mean a company is doing something wrong — capital-intensive businesses with small headcounts will mechanically produce higher per-employee values than labor-intensive ones. But within a sector, it surfaces a real allocation choice: two peers with similar economics can return very different amounts per worker, and that gap reflects deliberate decisions about dividends, buybacks, and reinvestment priorities. Each company's value is shown next to its sector median for this reason.
           </p>
           <p>
-            <strong>Limitations.</strong> Employee counts come from Yahoo Finance (full-time only) rather than SEC filings, so reporting conventions vary. The numerator uses a single year of extractive outflows, which can be lumpy — a one-time special dividend or large buyback will distort a single year. The metric ignores part-time, contract, and outsourced labor, which can meaningfully understate the true workforce for some businesses. Cross-sector comparisons are misleading; intra-sector comparisons are informative.
+            <strong>Limitations.</strong> Employee counts come from Yahoo Finance (full-time only) rather than SEC filings, so reporting conventions vary. The numerator uses a single year of flows and imputed costs, which can be lumpy — a one-time special dividend or large buyback will distort a single year. The underfunded CapEx term is an imperfect proxy for asset depletion; it will overstate the problem for companies in secular decline and understate it for those with very long-lived assets. The metric ignores part-time, contract, and outsourced labor, which can meaningfully understate the true workforce for some businesses. Cross-sector comparisons are misleading; intra-sector comparisons are informative.
           </p>
         </section>
 
