@@ -1,64 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { db } from '../neonClient'
+import { SCORES_TABLE, SCORES_YEARLY_TABLE, METRICS_TABLE, METRICS_YEARLY_TABLE } from '../dataConfig'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine, ResponsiveContainer, Cell,
   PieChart, Pie, Legend, LineChart, Line, CartesianGrid
 } from 'recharts'
 import './Company.css'
 
-const SECTOR_MAP = {
-  AAPL:'Information Technology',MSFT:'Information Technology',NVDA:'Information Technology',
-  AVGO:'Information Technology',ORCL:'Information Technology',CRM:'Information Technology',
-  AMD:'Information Technology',QCOM:'Information Technology',TXN:'Information Technology',
-  IBM:'Information Technology',NOW:'Information Technology',ANET:'Information Technology',
-  MU:'Information Technology',ADI:'Information Technology',KLAC:'Information Technology',
-  LRCX:'Information Technology',AMAT:'Information Technology',SNPS:'Information Technology',
-  CDNS:'Information Technology',MCHP:'Information Technology',FTNT:'Information Technology',
-  PANW:'Information Technology',
-  GOOG:'Communication Services',GOOGL:'Communication Services',META:'Communication Services',
-  NFLX:'Communication Services',DIS:'Communication Services',CMCSA:'Communication Services',
-  T:'Communication Services',VZ:'Communication Services',TMUS:'Communication Services',
-  LYV:'Communication Services',EA:'Communication Services',
-  AMZN:'Consumer Discretionary',TSLA:'Consumer Discretionary',HD:'Consumer Discretionary',
-  MCD:'Consumer Discretionary',NKE:'Consumer Discretionary',SBUX:'Consumer Discretionary',
-  LOW:'Consumer Discretionary',TJX:'Consumer Discretionary',BKNG:'Consumer Discretionary',
-  MAR:'Consumer Discretionary',HLT:'Consumer Discretionary',GM:'Consumer Discretionary',
-  EBAY:'Consumer Discretionary',DHI:'Consumer Discretionary',TPR:'Consumer Discretionary',
-  DRI:'Consumer Discretionary',YUM:'Consumer Discretionary',CMG:'Consumer Discretionary',
-  WMT:'Consumer Staples',PG:'Consumer Staples',KO:'Consumer Staples',PEP:'Consumer Staples',
-  COST:'Consumer Staples',PM:'Consumer Staples',MO:'Consumer Staples',
-  MDLZ:'Consumer Staples',CL:'Consumer Staples',KHC:'Consumer Staples',
-  GIS:'Consumer Staples',HSY:'Consumer Staples',CHD:'Consumer Staples',
-  XOM:'Energy',CVX:'Energy',COP:'Energy',EOG:'Energy',SLB:'Energy',
-  MPC:'Energy',VLO:'Energy',PSX:'Energy',OXY:'Energy',HAL:'Energy',
-  JNJ:'Health Care',UNH:'Health Care',LLY:'Health Care',ABBV:'Health Care',
-  MRK:'Health Care',PFE:'Health Care',TMO:'Health Care',DHR:'Health Care',
-  BMY:'Health Care',AMGN:'Health Care',GILD:'Health Care',ISRG:'Health Care',
-  SYK:'Health Care',MDT:'Health Care',HUM:'Health Care',CI:'Health Care',
-  CVS:'Health Care',INCY:'Health Care',VRTX:'Health Care',REGN:'Health Care',
-  BA:'Industrials',HON:'Industrials',UPS:'Industrials',CAT:'Industrials',
-  DE:'Industrials',GE:'Industrials',RTX:'Industrials',LMT:'Industrials',
-  NOC:'Industrials',GD:'Industrials',MMM:'Industrials',EMR:'Industrials',
-  ETN:'Industrials',FDX:'Industrials',UNP:'Industrials',CSX:'Industrials',
-  NSC:'Industrials',DAL:'Industrials',LUV:'Industrials',PWR:'Industrials',EME:'Industrials',
-  JPM:'Financials',BAC:'Financials',GS:'Financials',MS:'Financials',
-  C:'Financials',AXP:'Financials',BLK:'Financials',SCHW:'Financials',
-  CB:'Financials',SPGI:'Financials',MCO:'Financials',ICE:'Financials',
-  CME:'Financials',V:'Financials',MA:'Financials',PYPL:'Financials',
-  AMT:'Real Estate',PLD:'Real Estate',CCI:'Real Estate',EQIX:'Real Estate',
-  PSA:'Real Estate',WELL:'Real Estate',O:'Real Estate',SPG:'Real Estate',
-  SBAC:'Real Estate',DOC:'Real Estate',
-  NEE:'Utilities',DUK:'Utilities',SO:'Utilities',AEP:'Utilities',
-  EXC:'Utilities',SRE:'Utilities',XEL:'Utilities',WEC:'Utilities',
-  ETR:'Utilities',AWK:'Utilities',AEE:'Utilities',CNP:'Utilities',
-  EVRG:'Utilities',PEG:'Utilities',VST:'Utilities',
-  LIN:'Materials',SHW:'Materials',ECL:'Materials',NEM:'Materials',
-  FCX:'Materials',NUE:'Materials',STLD:'Materials',DOW:'Materials',
-  LYB:'Materials',PPG:'Materials',IFF:'Materials',
-}
-
-function getSector(ticker) { return SECTOR_MAP[ticker] || 'Other' }
+// Sector is data-driven: it comes from the SIC-derived `sector` column on the
+// company's row, so the universe can extend past the S&P 500 without a
+// hand-maintained ticker map. Sector peers are looked up by that column below.
 function fmt(n) { if (n == null) return '—'; return (n / 1e9).toFixed(2) + 'B' }
 function fmtAbs(n) { if (n == null) return '—'; return '$' + Math.abs(n / 1e9).toFixed(2) + 'B' }
 function fmtPerEmp(n) {
@@ -273,17 +225,16 @@ export default function Company() {
   useEffect(() => {
     async function load() {
       const t = ticker.toUpperCase()
-      const sector = getSector(t)
 
       const [scoreRes, metricsRes, allRes, yearlyRes, yearMetricsRes] = await Promise.all([
-        db.from('sp500_scores').select('*').eq('ticker', t).single(),
-        db.from('sp500_metrics').select('*').eq('ticker', t).single(),
-        db.from('sp500_scores').select('ticker, score_100, grade').eq('unscored', false),
-        db.from('sp500_scores_yearly')
+        db.from(SCORES_TABLE).select('*').eq('ticker', t).single(),
+        db.from(METRICS_TABLE).select('*').eq('ticker', t).single(),
+        db.from(SCORES_TABLE).select('ticker, score_100, grade').eq('eligible', true),
+        db.from(SCORES_YEARLY_TABLE)
           .select('fiscal_year, score_100, grade, unscored, b_productive, b_extractive, b_acquisitions, b_retained')
           .eq('ticker', t)
           .order('fiscal_year', { ascending: true }),
-        db.from('sp500_metrics_yearly')
+        db.from(METRICS_YEARLY_TABLE)
           .select('*')
           .eq('ticker', t)
           .order('fiscal_year', { ascending: true }),
@@ -295,27 +246,29 @@ export default function Company() {
       setYearly(yearlyRes.data || [])
       setYearMetrics(yearMetricsRes.data || [])
 
-      const sectorTickers = Object.entries(SECTOR_MAP)
-        .filter(([, s]) => s === sector).map(([tick]) => tick).filter(tick => tick !== t)
+      // Sector peers = same SIC-derived sector, same index, scored. Looked up by
+      // the data-driven `sector` column rather than a hardcoded ticker map.
+      const sector = scoreRes.data?.sector || metricsRes.data?.sector || 'Other'
+      const idx = scoreRes.data?.index_membership || metricsRes.data?.index_membership
 
-      // Include the current ticker in the metrics pull so sector-median calcs
-      // aren't biased by excluding the company being viewed.
-      const sectorTickersWithSelf = [...sectorTickers, t]
+      const peersRes = await db
+        .from(SCORES_TABLE)
+        .select('ticker, name, score_100, grade, label')
+        .eq('sector', sector)
+        .eq('index_membership', idx)
+        .eq('eligible', true)
+        .order('score_100', { ascending: false })
+      const peers = (peersRes.data || []).filter(p => p.ticker !== t)
+      const peerTickers = peers.map(p => p.ticker)
 
-      const [peersRes, peerMetricsRes] = await Promise.all([
-        db
-          .from('sp500_scores')
-          .select('ticker, name, score_100, grade, label')
-          .in('ticker', sectorTickers)
-          .eq('unscored', false)
-          .order('score_100', { ascending: false }),
-        db
-          .from('sp500_metrics')
-          .select('ticker, div, sbb, cx, da, di, dr, employees')
-          .in('ticker', sectorTickersWithSelf),
-      ])
+      // Include the current ticker so sector-median calcs aren't biased by
+      // excluding the company being viewed.
+      const peerMetricsRes = await db
+        .from(METRICS_TABLE)
+        .select('ticker, div, sbb, cx, da, di, dr, employees')
+        .in('ticker', [...peerTickers, t])
 
-      setSectorPeers(peersRes.data || [])
+      setSectorPeers(peers)
       setPeerMetrics(peerMetricsRes.data || [])
       setLoading(false)
     }
@@ -336,7 +289,7 @@ export default function Company() {
     </div>
   )
 
-  const sector = getSector(ticker.toUpperCase())
+  const sector = company.sector || 'Other'
   const allSorted = [...allScores].sort((a, b) => b.score_100 - a.score_100)
   const rank = allSorted.findIndex(c => c.ticker === ticker.toUpperCase()) + 1
 

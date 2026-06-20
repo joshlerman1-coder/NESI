@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { db } from '../neonClient'
+import { SCORES_TABLE } from '../dataConfig'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   LineChart, Line, CartesianGrid } from 'recharts'
 import './Scores.css'
@@ -20,61 +21,17 @@ const SECTORS = [
   'All Sectors',
   'Communication Services','Consumer Discretionary','Consumer Staples',
   'Energy','Financials','Health Care','Industrials',
-  'Information Technology','Materials','Real Estate','Utilities'
+  'Information Technology','Materials','Real Estate','Utilities','Other'
 ]
 
-const SECTOR_MAP = {
-  AAPL:'Information Technology',MSFT:'Information Technology',NVDA:'Information Technology',
-  AVGO:'Information Technology',ORCL:'Information Technology',CRM:'Information Technology',
-  AMD:'Information Technology',INTC:'Information Technology',QCOM:'Information Technology',
-  TXN:'Information Technology',IBM:'Information Technology',NOW:'Information Technology',
-  ANET:'Information Technology',MU:'Information Technology',ADI:'Information Technology',
-  KLAC:'Information Technology',LRCX:'Information Technology',AMAT:'Information Technology',
-  SNPS:'Information Technology',CDNS:'Information Technology',MCHP:'Information Technology',
-  TEL:'Information Technology',FTNT:'Information Technology',PANW:'Information Technology',
-  GOOG:'Communication Services',GOOGL:'Communication Services',META:'Communication Services',
-  NFLX:'Communication Services',DIS:'Communication Services',CMCSA:'Communication Services',
-  T:'Communication Services',VZ:'Communication Services',TMUS:'Communication Services',
-  CHTR:'Communication Services',LYV:'Communication Services',EA:'Communication Services',
-  AMZN:'Consumer Discretionary',TSLA:'Consumer Discretionary',HD:'Consumer Discretionary',
-  MCD:'Consumer Discretionary',NKE:'Consumer Discretionary',SBUX:'Consumer Discretionary',
-  LOW:'Consumer Discretionary',TJX:'Consumer Discretionary',BKNG:'Consumer Discretionary',
-  MAR:'Consumer Discretionary',HLT:'Consumer Discretionary',GM:'Consumer Discretionary',
-  EBAY:'Consumer Discretionary',DHI:'Consumer Discretionary',TPR:'Consumer Discretionary',
-  DRI:'Consumer Discretionary',YUM:'Consumer Discretionary',CMG:'Consumer Discretionary',
-  WMT:'Consumer Staples',PG:'Consumer Staples',KO:'Consumer Staples',PEP:'Consumer Staples',
-  COST:'Consumer Staples',PM:'Consumer Staples',MO:'Consumer Staples',
-  MDLZ:'Consumer Staples',CL:'Consumer Staples',KHC:'Consumer Staples',
-  GIS:'Consumer Staples',HSY:'Consumer Staples',CHD:'Consumer Staples',
-  XOM:'Energy',CVX:'Energy',COP:'Energy',EOG:'Energy',SLB:'Energy',
-  MPC:'Energy',VLO:'Energy',PSX:'Energy',OXY:'Energy',HAL:'Energy',
-  JNJ:'Health Care',UNH:'Health Care',LLY:'Health Care',ABBV:'Health Care',
-  MRK:'Health Care',PFE:'Health Care',TMO:'Health Care',DHR:'Health Care',
-  BMY:'Health Care',AMGN:'Health Care',GILD:'Health Care',ISRG:'Health Care',
-  SYK:'Health Care',MDT:'Health Care',HUM:'Health Care',CI:'Health Care',
-  CVS:'Health Care',INCY:'Health Care',VRTX:'Health Care',REGN:'Health Care',
-  BA:'Industrials',HON:'Industrials',UPS:'Industrials',CAT:'Industrials',
-  DE:'Industrials',GE:'Industrials',RTX:'Industrials',LMT:'Industrials',
-  NOC:'Industrials',GD:'Industrials',MMM:'Industrials',EMR:'Industrials',
-  ETN:'Industrials',FDX:'Industrials',UNP:'Industrials',CSX:'Industrials',
-  NSC:'Industrials',DAL:'Industrials',LUV:'Industrials',PWR:'Industrials',EME:'Industrials',
-  JPM:'Financials',BAC:'Financials',GS:'Financials',MS:'Financials',
-  C:'Financials',AXP:'Financials',BLK:'Financials',SCHW:'Financials',
-  CB:'Financials',SPGI:'Financials',MCO:'Financials',ICE:'Financials',
-  CME:'Financials',V:'Financials',MA:'Financials',PYPL:'Financials',
-  AMT:'Real Estate',PLD:'Real Estate',CCI:'Real Estate',EQIX:'Real Estate',
-  PSA:'Real Estate',WELL:'Real Estate',O:'Real Estate',SPG:'Real Estate',
-  SBAC:'Real Estate',DOC:'Real Estate',
-  NEE:'Utilities',DUK:'Utilities',SO:'Utilities',AEP:'Utilities',
-  EXC:'Utilities',SRE:'Utilities',XEL:'Utilities',WEC:'Utilities',
-  ETR:'Utilities',AWK:'Utilities',AEE:'Utilities',CNP:'Utilities',
-  EVRG:'Utilities',PEG:'Utilities',VST:'Utilities',
-  LIN:'Materials',SHW:'Materials',ECL:'Materials',NEM:'Materials',
-  FCX:'Materials',NUE:'Materials',STLD:'Materials',DOW:'Materials',
-  LYB:'Materials',PPG:'Materials',IFF:'Materials',
-}
+// Sector is now data-driven (SIC-derived `sector` column on the scores row),
+// so the universe can grow past the S&P 500 without a hand-maintained map.
 
-function getSector(ticker) { return SECTOR_MAP[ticker] || 'Other' }
+const INDEXES = [
+  { value: 'all', label: 'All Indexes' },
+  { value: 'sp500', label: 'S&P 500' },
+  { value: 'russell2000', label: 'Russell 2000' },
+]
 
 function scoreColor(s) {
   if (s >= 80) return 'var(--green)'
@@ -93,14 +50,16 @@ export default function Scores() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [sector, setSector] = useState('All Sectors')
+  const [index, setIndex] = useState('all')
   const [sort, setSort] = useState('name')
 
   useEffect(() => {
     async function load() {
       const { data } = await db
-        .from('sp500_scores')
+        .from(SCORES_TABLE)
         .select('*')
         .eq('unscored', false)
+        .eq('eligible', true)
         .order('score_100', { ascending: false })
       setCompanies(data || [])
       setLoading(false)
@@ -109,13 +68,14 @@ export default function Scores() {
   }, [])
 
   const filtered = useMemo(() => {
-    let list = companies.map(c => ({ ...c, sector: getSector(c.ticker) }))
+    let list = companies.map(c => ({ ...c, sector: c.sector || 'Other' }))
     if (search) {
       const q = search.toLowerCase()
       list = list.filter(c =>
         c.ticker.toLowerCase().includes(q) || (c.name || '').toLowerCase().includes(q)
       )
     }
+    if (index !== 'all') list = list.filter(c => c.index_membership === index)
     if (sector !== 'All Sectors') list = list.filter(c => c.sector === sector)
     switch (sort) {
       case 'score_desc': list.sort((a, b) => b.score_100 - a.score_100); break
@@ -124,7 +84,7 @@ export default function Scores() {
       case 'name':       list.sort((a, b) => (a.name||'').localeCompare(b.name||'')); break
     }
     return list
-  }, [companies, search, sector, sort])
+  }, [companies, search, sector, index, sort])
 
   const distData = useMemo(() => {
     const buckets = []
@@ -147,8 +107,8 @@ export default function Scores() {
         <div className="trend-header">
           <h2 className="trend-title">Percent of Surplus Extracted each year</h2>
           <p className="trend-sub">
-            Aggregate of every S&amp;P 500 company's productive vs extractive
-            cash use, 2010–2025. Ratio = Σ Extractive / (Σ Productive + Σ Extractive).
+            Aggregate productive vs extractive cash use across large U.S. public
+            companies, 2010–2025. Ratio = Σ Extractive / (Σ Productive + Σ Extractive).
           </p>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -199,6 +159,9 @@ export default function Scores() {
       <div className="scores-controls">
         <input className="search-input" type="text" placeholder="Search ticker or company name…"
           value={search} onChange={e => setSearch(e.target.value)} />
+        <select className="filter-select" value={index} onChange={e => setIndex(e.target.value)}>
+          {INDEXES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
         <select className="filter-select" value={sector} onChange={e => setSector(e.target.value)}>
           {SECTORS.map(s => <option key={s}>{s}</option>)}
         </select>

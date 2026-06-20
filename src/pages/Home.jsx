@@ -9,16 +9,16 @@ export default function Home() {
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-eyebrow">
-            <span className="mono">S&P 500 — 2024 10-K Data</span>
+            <span className="mono">U.S. Public Companies · SEC 10-K Data</span>
           </div>
           <h1 className="hero-title">
             Which companies are reinvesting,<br />
             and which are just <em className="hero-extracting">extracting</em>?
           </h1>
           <p className="hero-sub">
-            NESI scores every S&P 500 company on one question: does it reinvest surplus capital into productive capacity, or extract it for shareholders?
+            NESI scores U.S. public companies on one question: does it reinvest surplus capital into productive capacity, or extract it for shareholders?
           </p>
-          <Link to="/scores" className="hero-cta">Explore the scores →</Link>
+          <Link to="/" className="hero-cta">Explore the scores →</Link>
         </div>
       </section>
 
@@ -103,8 +103,8 @@ export default function Home() {
             </div>
             <div className="caveat">
               <div className="caveat-num">05</div>
-              <h4>~60 companies are unscored</h4>
-              <p>Companies with negative Total Allocable Cash (meaning free cash flow plus debt raised cannot cover acquisition spending) or extreme scores caused by near-zero denominators are flagged as unscored rather than assigned a misleading number. Banks are disproportionately represented here due to how debt functions differently in financial businesses.</p>
+              <h4>Some companies are unscored</h4>
+              <p>Companies that don't generate positive operating cash flow (no surplus to allocate), that lack the capital-expenditure and depreciation lines the formula needs, or that have too little filing history are flagged as unscored rather than assigned a misleading number. Banks, insurers, and pre-revenue companies are disproportionately represented here.</p>
             </div>
             <div className="caveat">
               <div className="caveat-num">06</div>
@@ -115,7 +115,7 @@ export default function Home() {
         </div>
 
         <div className="home-cta-bar">
-          <Link to="/scores" className="hero-cta">Explore all 440 scored companies →</Link>
+          <Link to="/" className="hero-cta">Explore all scored companies →</Link>
           <Link to="/methodology" className="cta-secondary">Read the full methodology →</Link>
         </div>
       </section>

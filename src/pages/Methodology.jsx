@@ -203,7 +203,7 @@ export default function Methodology() {
           </p>
           <div className="formula">GA = max( SEC ASC 832 3-year total, USAspending.gov FY2022–2024 total )</div>
           <p>
-            NESI takes the <em>higher</em> of the two sources rather than summing them, since the same award often surfaces in both. This avoids double-counting while ensuring coverage for companies that disclose under ASC 832 but are not easily matched on USAspending, and vice versa. Combining the two lifts coverage of the S&P 500 from roughly 4% (SEC-only) to over 12% of companies with detected public-money inflows.
+            NESI takes the <em>higher</em> of the two sources rather than summing them, since the same award often surfaces in both. This avoids double-counting while ensuring coverage for companies that disclose under ASC 832 but are not easily matched on USAspending, and vice versa. Combining the two lifts coverage from roughly 4% (SEC-only) to over 12% of companies with detected public-money inflows.
           </p>
           <h3>How NESI extracts the data</h3>
           <p>
@@ -276,7 +276,10 @@ export default function Methodology() {
           <p>Each fiscal year is scored on its own data, back to FY2018, and the headline is the average of the most recent seven single-year scores. Capital allocation decisions are lumpy — a major acquisition or debt repayment in one year can swing that year's score — which is exactly why the headline averages multiple years. The <em>Score over time</em> chart on each company page shows the individual years so the lumpiness, and the long-run trend, are both visible.</p>
 
           <h3>Financials, REITs, and unscored companies</h3>
-          <p>Banks, insurers, and REITs frequently don't report PP&E capital expenditures or a consolidated depreciation line under standard XBRL tags, so they fail the OCF/CX/DA gate and are left unscored — the productive-vs-extractive framing built around capex and depreciation doesn't fit their balance sheets. A small number of other companies tag capex only in company-specific extension namespaces NESI doesn't parse. Roughly 48 of the 500 are unscored for these reasons.</p>
+          <p>Banks, insurers, and REITs frequently don't report PP&E capital expenditures or a consolidated depreciation line under standard XBRL tags, so they fail the OCF/CX/DA gate and are left unscored — the productive-vs-extractive framing built around capex and depreciation doesn't fit their balance sheets. A small number of other companies tag capex only in company-specific extension namespaces NESI doesn't parse.</p>
+
+          <h3>Negative operating cash flow</h3>
+          <p>Companies with negative average operating cash flow over their scored window are left unscored at this time. NESI measures how a company allocates its operating <em>surplus</em>, and a business that is burning cash has no surplus to allocate — without this gate the formula would hand pre-revenue and cash-burning companies an inflated score. Their underlying data is still ingested and retained.</p>
         </section>
 
       </div>
