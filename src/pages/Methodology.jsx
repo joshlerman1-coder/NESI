@@ -125,13 +125,13 @@ export default function Methodology() {
 
         <section className="method-section">
           <h2>Step 4 — FCF Margin adjustment</h2>
-          <div className="formula">FCF Margin = max(OCF ÷ Revenue, 0)</div>
+          <div className="formula">FCF Margin = max(FCF ÷ Revenue, 0)</div>
           <div className="formula">Final Score = Allocation Score × (1 − FCF Margin)</div>
           <p>
             A company with a very high FCF margin — generating exceptional cash relative to revenue — has more capacity to reinvest productively and less excuse not to. The FCF margin adjustment applies a penalty proportional to how cash-generative the business is. A company with a 40% FCF margin sees its allocation score multiplied by 0.6. A company with a 5% margin is barely affected.
           </p>
           <p>
-            FCF margin is floored at zero. A company with negative operating cash flow does not receive a bonus — it is simply treated as if the margin adjustment is neutral (multiplier of 1.0).
+            FCF margin is floored at zero. A company with negative free cash flow does not receive a bonus — it is simply treated as if the margin adjustment is neutral (multiplier of 1.0).
           </p>
           <p>
             The final score naturally falls in [0, 1], which is multiplied by 100 for display.
@@ -276,7 +276,10 @@ export default function Methodology() {
           <p>Each fiscal year is scored on its own data, back to FY2018, and the headline is the average of the most recent seven single-year scores. Capital allocation decisions are lumpy — a major acquisition or debt repayment in one year can swing that year's score — which is exactly why the headline averages multiple years. The <em>Score over time</em> chart on each company page shows the individual years so the lumpiness, and the long-run trend, are both visible.</p>
 
           <h3>Financials, REITs, and unscored companies</h3>
-          <p>Banks, insurers, and REITs frequently don't report PP&E capital expenditures or a consolidated depreciation line under standard XBRL tags, so they fail the OCF/CX/DA gate and are left unscored — the productive-vs-extractive framing built around capex and depreciation doesn't fit their balance sheets. A small number of other companies tag capex only in company-specific extension namespaces NESI doesn't parse.</p>
+          <p>Banks and insurers frequently don't report PP&E capital expenditures or a consolidated depreciation line under standard XBRL tags, so they fail the OCF/CX/DA gate and are left unscored — the productive-vs-extractive framing built around capex and depreciation doesn't fit their balance sheets. A small number of other companies tag capex only in company-specific extension namespaces NESI doesn't parse.</p>
+          <p><strong>Equity REITs</strong> don't tag PP&E capex either — they invest by acquiring and developing real estate. NESI now reads those real-estate-acquisition tags (<span className="mono">PaymentsToAcquireRealEstate</span>, <span className="mono">…HeldForInvestment</span>, <span className="mono">…DevelopRealEstateAssets</span>) as capital expenditure, so most equity REITs are now scored. Mortgage REITs, which hold loans rather than property, have no such capex and remain unscored.</p>
+          <div className="method-callout">
+            <strong>Read scored REITs and financials with caution.</strong> REITs that report capex — now including real-estate acquisition — and depreciation pass the gate and receive a score, but the operating-company model still misreads them, so their grades are not directly comparable to ordinary companies. Three structural distortions stack up for a REIT: (1) revenue is just rental income, a thin slice of the asset base, while operating cash flow adds back large real-estate depreciation — so the <strong>FCF margin runs structurally high</strong> (UHT shows ~43%) without indicating cash hoarding; (2) real estate is depreciated far faster than it is recapitalized, so depreciation routinely exceeds maintenance capex and trips the <strong>underfunded-capex extractive penalty</strong> even when the business is healthy; and (3) a REIT must distribute roughly 90% of taxable income as dividends by law, and those mandatory payouts are <strong>counted as extractive shareholder returns</strong>. The net effect is that scored REITs cluster at the bottom of the rankings as an artifact of their structure rather than their actual capital allocation. A REIT-appropriate framework would use FFO/AFFO rather than the capex-vs-depreciation lens; until that exists, treat any REIT or financial score as indicative at best.</div>
 
           <h3>Negative operating cash flow</h3>
           <p>Companies with negative average operating cash flow over their scored window are left unscored at this time. NESI measures how a company allocates its operating <em>surplus</em>, and a business that is burning cash has no surplus to allocate — without this gate the formula would hand pre-revenue and cash-burning companies an inflated score. Their underlying data is still ingested and retained.</p>
