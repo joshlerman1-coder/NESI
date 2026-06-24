@@ -50,7 +50,7 @@ export default function Scores() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [sector, setSector] = useState('All Sectors')
-  const [index, setIndex] = useState('all')
+  const [index, setIndex] = useState('sp500')
   const [sort, setSort] = useState('name')
 
   useEffect(() => {
